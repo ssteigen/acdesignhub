@@ -1,0 +1,67 @@
+{% extends '__base.html' %}
+
+{% block javascript %}
+{{ block.super }}
+<script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
+{% endblock %}
+
+{% block content %}
+  <h1>Upload a new design</h1>
+  <div id="preview"></div>
+  <form id="submission" method="POST">
+    {% csrf_token %}
+    {{ form.as_ul }}
+    <input type="submit" value="Submit">
+  </form>
+  <script type="text/javascript">
+    (function () {
+
+      $(document).ready(function () { 
+
+        $("input#id_original_image").change(function () {
+          if (this.files && this.files[0]) {
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                $('div#preview').html(
+                  '<img style="max-width: 100%" src="' + e.target.result + '" />'
+                )
+
+                Tesseract.recognize(
+                    e.target.result,
+                    'eng',
+                    { logger: m => console.log(m) }
+                  ).then(({ data: { text } }) => {
+                    var lines = text.split(/\r?\n/).filter(Boolean)
+
+                    var codes = lines.slice(-1)[0].split(/\s+/)
+                    var designType = lines.slice(-2)[0].trim()
+                    var designer = lines.slice(-3)[0].trim()
+
+                    $('select#id_design_type option').map(function () {
+                      var optionText = $(this).text()
+                      var optionValue = $(this).val()
+
+                      if (designType.toLowerCase().includes(optionText.toLowerCase())) {
+                        $('select#id_design_type').val(optionValue)
+                      }
+                    })
+
+                    $('input#id_designer').val(designer)
+                    $('input#id_design_code').val(codes.pop())
+                    $('input#id_designer_code').val(codes.pop())
+                  })
+              }
+
+              reader.readAsDataURL(this.files[0]);
+          }
+        });
+
+        $('form#submission').submit(function (event) {
+          event.preventDefault()
+          console.log($(this).serialize())
+        })
+      })
+    })();
+  </script>
+{% endblock %}
