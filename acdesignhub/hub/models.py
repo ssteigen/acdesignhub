@@ -29,7 +29,7 @@ class Design(models.Model):
     objects = DesignManager()
 
     TYPE_CHOICES = (
-        ('BALLOON_HEM_DRESS', 'Baloon-hem Dress'),
+        ('BALLOON_HEM_DRESS', 'Balloon-hem dress'),
         ('BRIMMED_CAP', 'Brimmed cap'),
         ('BRIMMED_HAT', 'Brimmed hat'),
         ('COAT', 'Coat'),
