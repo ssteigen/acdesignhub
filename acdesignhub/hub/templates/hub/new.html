@@ -8,7 +8,7 @@
 {% block content %}
   <h1>Upload a new design</h1>
   <div id="preview"></div>
-  <form id="submission" method="POST">
+  <form id="submission" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_ul }}
     <input type="submit" value="Submit">
@@ -16,7 +16,7 @@
   <script type="text/javascript">
     (function () {
 
-      $(document).ready(function () { 
+      $(document).ready(function () {
 
         $("input#id_original_image").change(function () {
           if (this.files && this.files[0]) {
@@ -36,7 +36,7 @@
 
                     var codes = lines.slice(-1)[0].split(/\s+/)
                     var designType = lines.slice(-2)[0].trim()
-                    var designer = lines.slice(-3)[0].trim()
+                    var creator = lines.slice(-3)[0].trim()
 
                     $('select#id_design_type option').map(function () {
                       var optionText = $(this).text()
@@ -47,20 +47,15 @@
                       }
                     })
 
-                    $('input#id_designer').val(designer)
+                    $('input#id_creator').val(creator)
                     $('input#id_design_code').val(codes.pop())
-                    $('input#id_designer_code').val(codes.pop())
+                    $('input#id_creator_code').val(codes.pop())
                   })
               }
 
               reader.readAsDataURL(this.files[0]);
           }
         });
-
-        $('form#submission').submit(function (event) {
-          event.preventDefault()
-          console.log($(this).serialize())
-        })
       })
     })();
   </script>
