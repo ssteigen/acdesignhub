@@ -53,15 +53,15 @@ class Design(models.Model):
     # Design metadata.
     design_name = models.CharField(max_length=255)
     design_type = models.CharField(choices=TYPE_CHOICES, max_length=128)
-    design_code = models.CharField(max_length=14)
+    design_code = models.CharField(max_length=17)
     description = models.TextField(blank=True, null=True)
 
-    # Designer metadata.
-    designer = models.CharField(max_length=10)
-    designer_code = models.CharField(max_length=14)
+    # Creator metadata.
+    creator = models.CharField(max_length=10)
+    creator_code = models.CharField(max_length=17)
 
     # Administration
     approved = models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return f'{self.design_name} ({self.designer})'
+        return f'{self.design_name} ({self.creator})'

@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from .models import Design 
+from .models import Design
 
 @admin.register(Design)
 class DesignAdmin(admin.ModelAdmin):
 
     list_display = (
         'design_name',
-        'designer',
+        'creator',
         'original_image',
         'approved',
     )
