@@ -19,9 +19,14 @@ def index(request):
         designs = designs.filter(creator_code=request.GET['creator_code'])
 
     if "design_code" in request.GET:
-        design = designs.filter(design_code=request.GET['design_code'])
+        designs = designs.filter(design_code=request.GET['design_code'])
+        # if there is more than one design, throw an error.
+        design = designs[0]
+        related_designs = Design.objects.approved().filter(creator_code=design.creator_code).exclude(design_code=design.design_code)
+
         return render(request, 'hub/design.html', {
-            'design': design
+            'design': design,
+            'related_designs': related_designs
         })
 
     return render(request, 'hub/index.html', {

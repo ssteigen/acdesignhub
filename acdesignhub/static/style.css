@@ -6,6 +6,9 @@
 /* $green: #59bca8; */
 /* $teal: #075663; */
 /* $tan: #f9f6e5; */
+/* $pink: #f8a9af */
+/* $light-tan: #f1edd4 */
+/* $dark-tan: #f1e7cc */
 
 body {
     background-color: rgb(222, 242, 217);
@@ -14,8 +17,19 @@ body {
     background-position: 0 0, 15px 15px;
 }
 
+.bg-info {
+    background-color: #f1edd4 !important;
+    border: 6px solid #f1e7cc;
+}
+
 .btn.btn-primary {
     background: #075663;
+    border-color: #075663;
+}
+
+.btn.btn-secondary {
+    background: #59bca8;
+    border-color: #59bca8;
 }
 
 .btn.btn-default {
