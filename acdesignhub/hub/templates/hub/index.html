@@ -1,22 +1,31 @@
 {% extends '__base.html' %}
 
-{% load django_tables2 %}
+{% load hub_extras %}
 
 {% block content %}
 
-<ul class="nav nav-pills">
-    <li class="nav-item">
-        <a href="/" class="nav-link">All</a>
+<ul class="nav d-flex justify-content-between my-2">
+    <li class="nav-item mb-2">
+        {% if design_type_selected %}
+            <a href="/" class="btn btn-default">All</a>
+        {% else %}
+            <a href="/" class="btn btn-primary">All</a>
+        {% endif %}
     </li>
-{% for value, label in design_types %}
-    <li class="nav-item">
-        <a href="/?design_type={{value}}" class="nav-link">{{ label }}</a>
-    </li>
-{% endfor %}
+    {% for value, label in design_types %}
+        <li class="nav-item mb-2">
+            {% if value == design_type_selected %}
+                <a href="/?design_type={{value}}" class="btn btn-primary">{{ label }}</a>
+            {% else %}
+                <a href="/?design_type={{value}}" class="btn btn-default">{{ label }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
 </ul>
 
-<div class="card-deck">
+<div class="row row-cols-1 row-cols-md-3">
     {% for design in designs %}
+    <div class="col mb-4">
         <div class="card">
             <img class="card-img-top" src="{{ design.original_image.url }}" />
             <div class="card-body">
@@ -29,13 +38,14 @@
                 {% endif %}
             </div>
             <ul class="list-group">
-                <li class="list-group-item"><code>{{ design.creator_code }}</code></li>
-                <li class="list-group-item"><code>{{ design.design_code }}</code></li>
+                <li class="list-group-item"><code>{{ design.creator_code|format_design_code }}</code></li>
+                <li class="list-group-item"><code>{{ design.design_code|format_design_code }}</code></li>
             </ul>
             <div class="card-body">
                 {{ design.get_design_type_display }}
             </div>
         </div>
+    </div>
     {% endfor %}
 </div>
 

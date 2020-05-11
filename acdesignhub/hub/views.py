@@ -17,7 +17,8 @@ def index(request):
 
     return render(request, 'hub/index.html', {
         'designs': designs,
-        'design_types': design_types
+        'design_types': design_types,
+        'design_type_selected': request.GET.get('design_type'),
     })
 
 def new(request):
