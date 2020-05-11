@@ -6,6 +6,8 @@ Users will be able to upload screenshot of a custom design, which will then be a
 
 Users will then be able to add custom tags, such as `sign`, `ground scatter`, `path`, `path border`, `wall art`, `flower`, `moss`, `face paint`, `eyebrows`, `museum`, `fish`, etc.
 
+![Screenshot](readme/screenshot.png)
+
 ![Wireframe-01](readme/wireframe-01.png)
 
 ![Wireframe-02](readme/wireframe-02.png)

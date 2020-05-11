@@ -15,6 +15,15 @@ def index(request):
     if "design_type" in request.GET:
         designs = designs.filter(design_type=request.GET['design_type'])
 
+    if "creator_code" in request.GET:
+        designs = designs.filter(creator_code=request.GET['creator_code'])
+
+    if "design_code" in request.GET:
+        design = designs.filter(design_code=request.GET['design_code'])
+        return render(request, 'hub/design.html', {
+            'design': design
+        })
+
     return render(request, 'hub/index.html', {
         'designs': designs,
         'design_types': design_types,
