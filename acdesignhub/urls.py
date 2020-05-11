@@ -22,7 +22,7 @@ from django.urls import path
 from acdesignhub.hub import views
 
 urlpatterns = [
-    path('', views.TableView.as_view()),
+    path('', views.index),
     path('new/', views.new),
     path('admin/', admin.site.urls),
     *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),

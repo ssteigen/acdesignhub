@@ -16,7 +16,7 @@ Create and activate a virtualenv
 
 Then run:
 ```
-$ bin/setup
+$ ./bin/setup
 ```
 
 ## Features

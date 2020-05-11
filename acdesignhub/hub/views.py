@@ -8,13 +8,17 @@ from .models import Design
 from .tables import DesignTable
 from .forms import DesignForm
 
+def index(request):
+    designs = Design.objects.approved()
+    design_types = Design.TYPE_CHOICES
 
-class TableView(tables.SingleTableView):
-    """A django-tables2 view for listing the approved designs."""
-    table_class = DesignTable
-    queryset = Design.objects.approved()
-    template_name = 'hub/index.html'
+    if "design_type" in request.GET:
+        designs = designs.filter(design_type=request.GET['design_type'])
 
+    return render(request, 'hub/index.html', {
+        'designs': designs,
+        'design_types': design_types
+    })
 
 def new(request):
     if request.method == 'POST':
