@@ -11,7 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+    <script src="https://kit.fontawesome.com/c400ee9e0f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     {% block stylesheets %}
     {% endblock %}
@@ -20,17 +20,26 @@
     {% block extra_head %}{% endblock %}
   </head>
   <body>
-    <div id="main" role="main">
-      <header>
-        <h1>AC Design Hub</h1>
-      </header>
+    <header class="header mb-auto py-3">
+      <nav class="navbar container">
+        <a class="navbar-brand"><i class="fas fa-palette"></i> AC Design Hub</a>
+        <form class="form-inline">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i><span class="sr-only">Search</span></button>
+        </form>
+      </div>
+      </div>
+    </header>
 
+    <div id="main" role="main" class="container">
       {% block content %}
       {% endblock %}
-
-      <footer>
-        <p>Contact Info</p>
-      </footer>
     </div>
+
+    <footer class="footer mt-auto py-3">
+      <div class="container">
+        Contact Info
+      </div>
+    </footer>
   </body>
 </html>

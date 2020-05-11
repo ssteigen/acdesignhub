@@ -1,0 +1,33 @@
+/* $isabelle-yellow: #fff2bb; */
+/* $nook-green: #cff9db; */
+/* $kk-blue: #bddef8; */
+/* $able-red: #ffd9d1; */
+/* $brown: #b8844d; */
+/* $green: #59bca8; */
+/* $teal: #075663; */
+/* $tan: #f9f6e5; */
+
+body {
+    background-color: rgb(222, 242, 217);
+    background-image: radial-gradient(#fff 20%, transparent 0), radial-gradient(#fff 20%, transparent 0);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+}
+
+.btn.btn-primary {
+    background: #075663;
+}
+
+.btn.btn-default {
+    background: #f9f6e5;
+}
+
+header {
+    background: #59bca8;
+    color: white;
+}
+
+footer {
+    background: #59bca8;
+    color: white;
+}
