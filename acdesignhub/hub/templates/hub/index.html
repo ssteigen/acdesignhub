@@ -7,7 +7,7 @@
 <ul class="nav d-flex justify-content-between my-2">
     <li class="nav-item mb-2">
         {% if design_type_selected %}
-            <a href="/" class="btn btn-default">All</a>
+            <a href="/" class="btn btn-secondary">All</a>
         {% else %}
             <a href="/" class="btn btn-primary">All</a>
         {% endif %}
@@ -17,11 +17,15 @@
             {% if value == design_type_selected %}
                 <a href="/?design_type={{value}}" class="btn btn-primary">{{ label }}</a>
             {% else %}
-                <a href="/?design_type={{value}}" class="btn btn-default">{{ label }}</a>
+                <a href="/?design_type={{value}}" class="btn btn-secondary">{{ label }}</a>
             {% endif %}
         </li>
     {% endfor %}
 </ul>
+
+<div class="text-center bg-info py-2 my-4 rounded-pill">
+    Displaying {{ designs|length }} design{{ designs|length|pluralize }}
+</div>
 
 <div class="row row-cols-1 row-cols-md-3">
     {% for design in designs %}
