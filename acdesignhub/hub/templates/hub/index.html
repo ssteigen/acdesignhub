@@ -1,2 +1,42 @@
+{% extends '__base.html' %}
+
 {% load django_tables2 %}
-{% render_table table %}
+
+{% block content %}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a href="/" class="nav-link">All</a>
+    </li>
+{% for value, label in design_types %}
+    <li class="nav-item">
+        <a href="/?design_type={{value}}" class="nav-link">{{ label }}</a>
+    </li>
+{% endfor %}
+</ul>
+
+<div class="card-deck">
+    {% for design in designs %}
+        <div class="card">
+            <img class="card-img-top" src="{{ design.original_image.url }}" />
+            <div class="card-body">
+                <h5 class="card-title">{{ design.design_name }}
+                    <br>
+                    <small>By {{ design.creator }}</small>
+                </h5>
+                {% if design.description %}
+                    <p class="card-text">{{ design.description }}</p>
+                {% endif %}
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item"><code>{{ design.creator_code }}</code></li>
+                <li class="list-group-item"><code>{{ design.design_code }}</code></li>
+            </ul>
+            <div class="card-body">
+                {{ design.get_design_type_display }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
