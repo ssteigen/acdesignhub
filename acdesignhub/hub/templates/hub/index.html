@@ -29,20 +29,32 @@
         <div class="card">
             <img class="card-img-top" src="{{ design.original_image.url }}" />
             <div class="card-body">
-                <h5 class="card-title">{{ design.design_name }}
+                <h4 class="card-title">
+                    <strong>{{ design.design_name }}</strong>
                     <br>
                     <small>By {{ design.creator }}</small>
-                </h5>
-                {% if design.description %}
-                    <p class="card-text">{{ design.description }}</p>
-                {% endif %}
-            </div>
-            <ul class="list-group">
-                <li class="list-group-item"><code>{{ design.creator_code|format_design_code }}</code></li>
-                <li class="list-group-item"><code>{{ design.design_code|format_design_code }}</code></li>
-            </ul>
-            <div class="card-body">
-                {{ design.get_design_type_display }}
+                </h4>
+                <hr>
+                <dl class="mb-0">
+                    <dt>Creator Code</dt>
+                    <dd>
+                        <a href="/?creator_code={{design.creator_code}}">
+                            <code>{{ design.creator_code|format_design_code }}</code>
+                        </a>
+                    </dd>
+                    <dt>Design Code</dt>
+                    <dd>
+                        <a href="/?design_code={{design.design_code}}">
+                            <code>{{ design.design_code|format_design_code }}</code>
+                        </a>
+                    </dd>
+                    <dt>Design Type</dt>
+                    <dd>
+                        <a href="/?design_type={{design.design_type}}">
+                            {{ design.get_design_type_display }}
+                        </a>
+                    </dd>
+                </dl>
             </div>
         </div>
     </div>
