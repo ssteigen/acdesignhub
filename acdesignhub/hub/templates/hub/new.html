@@ -52,40 +52,88 @@
 
         $("input#id_original_image").change(function () {
           if (this.files && this.files[0]) {
-              var reader = new FileReader();
+            var reader = new FileReader();
 
-              reader.onload = function (e) {
-                $('div#preview').html(
-                  '<img style="max-width: 100%" src="' + e.target.result + '" />'
-                )
+            reader.onload = function (e) {
+              const preview = $('div#preview');
+              preview.empty();
 
-                Tesseract.recognize(
-                    e.target.result,
-                    'eng',
-                    { logger: m => console.log(m) }
-                  ).then(({ data: { text } }) => {
-                    var lines = text.split(/\r?\n/).filter(Boolean)
+              const img = new Image();
+              img.src = e.target.result;
+              img.onload = function() {
+                const width = this.width;
+                const height = this.height;
 
-                    var codes = lines.slice(-1)[0].split(/\s+/)
-                    var designType = lines.slice(-2)[0].trim()
-                    var creator = lines.slice(-3)[0].trim()
+                const worker = Tesseract.createWorker({ logger: console.log });
 
-                    $('select#id_design_type option').map(function () {
-                      var optionText = $(this).text()
-                      var optionValue = $(this).val()
+                (async function () {
+                  await worker.load();
+                  await worker.loadLanguage('eng');
+                  await worker.initialize('eng');
 
-                      if (designType.toLowerCase().includes(optionText.toLowerCase())) {
-                        $('select#id_design_type').val(optionValue)
-                      }
-                    })
+                  function extractText(left, top, width, height) {
+                    const { data: { text } } = await worker.recognize(e.target.result, {
+                      rectangle: { left, top, width, height },
+                    });
+                    return text;
+                  }
 
-                    $('input#id_creator').val(creator)
-                    $('input#id_design_code').val(codes.pop())
-                    $('input#id_creator_code').val(codes.pop())
-                  })
-              }
+                  $('input#id_design_name').val(extractText(
+                    /* 488 / 1280 */ 0.38125 * width,
+                    /* 112 /  720 */ 0.15556 * height,
+                    /* 305 / 1280 */ 0.23828 * width,
+                    /*  74 /  720 */ 0.10278 * height
+                  ));
 
-              reader.readAsDataURL(this.files[0]);
+                  $('input#id_creator_name').val(extractText(
+                    /*  69 / 1280 */ 0.05391 * width,
+                    /* 466 /  720 */ 0.64722 * height,
+                    /* 276 / 1280 */ 0.21563 * width,
+                    /*  47 /  720 */ 0.06528 * height
+                  ));
+
+                  $('input#id_creator_island').val(extractText(
+                    /* 119 / 1280 */ 0.09297 * width,
+                    /* 513 /  720 */ 0.71250 * height,
+                    /* 214 / 1280 */ 0.16719 * width,
+                    /*  42 /  720 */ 0.05833 * height
+                  ));
+
+                  $('input#id_creator_code').val(extractText(
+                    /*  69 / 1280 */ 0.05391 * width,
+                    /* 557 /  720 */ 0.77361 * height,
+                    /* 276 / 1280 */ 0.21563 * width,
+                    /*  30 /  720 */ 0.04167 * height
+                  ));
+
+                  const designType = extractText(
+                    /* 924 / 1280 */ 0.72188 * width,
+                    /* 518 /  720 */ 0.71944 * height,
+                    /* 300 / 1280 */ 0.23438 * width,
+                    /*  35 /  720 */ 0.04861 * height
+                  );
+                  $('select#id_design_type option').map(function () {
+                    const optionText = $(this).text();
+                    const optionValue = $(this).val();
+
+                    if (designType.toLowerCase().includes(optionText.toLowerCase())) {
+                      $(this).prop('selected', true);
+                    }
+                  });
+
+                  $('input#id_design_code').val(extractText(
+                    /* 924 / 1280 */ 0.72188 * width,
+                    /* 557 /  720 */ 0.77361 * height,
+                    /* 300 / 1280 */ 0.23438 * width,
+                    /*  30 /  720 */ 0.04167 * height
+                  ));
+
+                  await worker.terminate();
+                })();
+              };
+            }
+
+            reader.readAsDataURL(this.files[0]);
           }
         });
       })
