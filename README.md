@@ -21,6 +21,10 @@ Then run:
 $ ./bin/setup
 ```
 
+Test DB available in `cypress/fixtures/test_db`
+
+Login is `admin`/`admin`
+
 ## Features
 
 ### Todo
