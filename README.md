@@ -23,11 +23,31 @@ $ ./bin/setup
 
 ## Features
 
+### Todo
+
+[] add image thumbnails for admin
+[] add approve button for admin
+[] export test database
+[] add download count per design
+[] add view count per design
+[] improve tesseract.js OCR
+  [] add rectangles to OCR
+  [] add island name to OCR
+[] auto crop image thumbnail
+[] add pagination to `/` route
+[] add `/design/<design_code>` route
+[] allow uploading additonal images
+[] implement search functionality
+[] limit fields required for submission
+  [] original_image
+  [] creator_code
+  [] design_code
+
 ### MVP
 
 #### Image Upload
 
-* allow users to upload a screenshot of an AC Design
+[x] allow users to upload a screenshot of an AC Design
 * OCR the image for the following info:
   * design title
   * creator name
@@ -41,27 +61,27 @@ $ ./bin/setup
 
 #### Design Search
 
-* display gallery of all designs
+[x] display gallery of all designs
 * allow users to search designs that have been uploaded by any field value
-* display designs grouped by design type (`custom design`, `coat`, `hoodie`, `ballon-hem dress`, etc)
-* display designs with a certain tag
-* display designs with a certain creator code
-* allow users to click a creator code to see all designs by
+[x] display designs grouped by design type (`custom design`, `coat`, `hoodie`, `ballon-hem dress`, etc)
+* display designs that match a given term
+[x] display designs with a certain creator code
+[x] allow users to click a creator code to see all designs by
 that creator
 
 #### General
 
-* display contact info in site footer to allow reporting site issues
+[x] display contact info in site footer to allow reporting site issues
 
 ### Features for Later
 
 #### Design Detail Page
-* allow users to click a design thumbnail to see a detailed page
+[x] allow users to click a design thumbnail to see a detailed page
 * detailed page should show:
-  * original screenshot
+  [x] original screenshot
   * additional images (ex. screenshot of design applied in-game)
   * tags associated with the design (click a tag to view all designs with that tag)
-  * thumbnails of other designs with the same creator code
+  [x] thumbnails of other designs with the same creator code
   * thumbnails of similar designs?
 * allow users to upload additonal screenshots of design applied in-game (demo example use)
 
