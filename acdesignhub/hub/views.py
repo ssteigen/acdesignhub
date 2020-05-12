@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
+from django.db.models import F
 
 import django_tables2 as tables
 
@@ -23,6 +24,9 @@ def index(request):
         # if there is more than one design, throw an error.
         design = designs[0]
         related_designs = Design.objects.approved().filter(creator_code=design.creator_code).exclude(design_code=design.design_code)
+
+        # increment view counter
+        Design.objects.filter(design_code=request.GET['design_code']).update(view_count=F('view_count')+1)
 
         return render(request, 'hub/design.html', {
             'design': design,
