@@ -13,7 +13,8 @@ class DesignForm(forms.ModelForm):
             'design_type',
             'design_code',
             'description',
-            'creator',
+            'creator_name',
+            'creator_island',
             'creator_code',
         )
 

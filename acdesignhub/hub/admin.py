@@ -7,8 +7,11 @@ class DesignAdmin(admin.ModelAdmin):
 
     list_display = (
         'design_name',
-        'creator',
+        'creator_code',
+        'design_code',
         'original_image',
+        'view_count',
+        'download_count',
         'approved',
     )
 

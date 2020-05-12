@@ -17,9 +17,31 @@ body {
     background-position: 0 0, 15px 15px;
 }
 
+#preview {
+    border: 4px dashed #666;
+    border-radius: 12px;
+    background: #eee;
+}
+
+#preview img {
+    width: 100%;
+}
+
+#id_description {
+    height: 6rem;
+}
+
 .bg-info {
     background-color: #f1edd4 !important;
     border: 6px solid #f1e7cc;
+}
+
+.bg-primary {
+    background-color: #075663 !important;
+}
+
+.bg-secondary {
+    background-color: #59bca8 !important;
 }
 
 .btn.btn-primary {

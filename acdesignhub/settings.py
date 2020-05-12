@@ -40,6 +40,7 @@ STATICFILES_DIRS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'django_tables2',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 ROOT_URLCONF = 'acdesignhub.urls'
 
