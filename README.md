@@ -29,46 +29,45 @@ Login is `admin`/`admin`
 
 ### Todo
 
-- [] add image thumbnails for admin
-- [] add approve button for admin
-- [] export test database
-- [] add download count per design
-- [] add view count per design
-- [] improve tesseract.js OCR
-  - [] add rectangles to OCR
-  - [] add island name to OCR
-- [] auto crop image thumbnail
-- [] add pagination to `/` route
-- [] add `/design/<design_code>` route
-- [] allow uploading additonal images
-- [] implement search functionality
-- [] limit fields required for submission
-  - [] original_image
-  - [] creator_code
-  - [] design_code
+- [x] add image thumbnails for admin
+- [x] add approve button for admin
+- [x] export test database
+- [x] add download count per design
+- [x] add view count per design
+- [ ] improve tesseract.js OCR
+  - [ ] add rectangles to OCR
+- [ ] auto crop image thumbnail
+- [ ] add pagination to `/` route
+- [x] add `/design/<design_code>` route
+- [ ] allow uploading additonal images
+- [ ] implement search functionality
+- [ ] limit fields required for submission
+  - [ ] original_image
+  - [ ] creator_code
+  - [ ] design_code
 
 ### MVP
 
 #### Image Upload
 
 - [x] allow users to upload a screenshot of an AC Design
-- OCR the image for the following info:
+- [ ] OCR the image for the following info:
   - design title
   - creator name
   - creator island name
   - design type (custom design, coat, hoodie, balloon-hem dress, etc)
   - creator code `MA-XXXX-XXXX-XXXX`
   - design code `MO-XXXX-XXXX-XXXX`
-- auto-fill submission form with OCR data
-- require users to crop square design thumbnail from screenshot
-- allow users to add arbitrary tags (`sign`, `flower`, `pink`, `cherry blossom`, `path`, etc)
+- [ ] auto-fill submission form with OCR data
+- [ ] require users to crop square design thumbnail from screenshot
+- [ ] allow users to add arbitrary tags (`sign`, `flower`, `pink`, `cherry blossom`, `path`, etc)
 
 #### Design Search
 
 - [x] display gallery of all designs
--  allow users to search designs that have been uploaded by any field value
+- [ ] allow users to search designs that have been uploaded by any field value
 - [x] display designs grouped by design type (`custom design`, `coat`, `hoodie`, `ballon-hem dress`, etc)
-- display designs that match a given term
+- [ ] display designs that match a given term
 - [x] display designs with a certain creator code
 - [x] allow users to click a creator code to see all designs by
 that creator
@@ -83,13 +82,13 @@ that creator
 - [x] allow users to click a design thumbnail to see a detailed page
 - detailed page should show:
   - [x] original screenshot
-  - additional images (ex. screenshot of design applied in-game)
-  - tags associated with the design (click a tag to view all designs with that tag)
+  - [ ] additional images (ex. screenshot of design applied in-game)
+  - [ ] tags associated with the design (click a tag to view all designs with that tag)
   - [x] thumbnails of other designs with the same creator code
-  - thumbnails of similar designs?
-- allow users to upload additonal screenshots of design applied in-game (demo example use)
+  - [ ] thumbnails of similar designs?
+- [ ] allow users to upload additonal screenshots of design applied in-game (demo example use)
 
 #### Account
-- allow users to create an account
-- allow users to favorite designs
-- allow sorting designs by popularity (views? favorites?)
+- [ ] allow users to create an account
+- [ ] allow users to favorite designs
+- [ ] allow sorting designs by popularity (views? favorites?)
