@@ -23,6 +23,8 @@ from acdesignhub.hub import views
 
 urlpatterns = [
     path('', views.index),
+    path('design/<str:design_code>', views.detail),
+    path('design/<str:design_code>/download', views.download),
     path('new/', views.new),
     path('admin/', admin.site.urls),
     *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
