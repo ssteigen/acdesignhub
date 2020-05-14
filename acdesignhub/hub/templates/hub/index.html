@@ -37,7 +37,7 @@
                         </h2>
                     </div>
                     <div class="col-auto">
-                        <a target="_blank" href="{{ design.original_image.url }}" data-design-code={{design.design_code}} download class="btn-download btn btn-secondary btn-sm" >
+                        <a target="_blank" href="design/{{ design.design_code }}/download" class="btn-download btn btn-secondary btn-sm" >
                             <i class="fas fa-download"></i>
                             <span class="sr-only">Download Image</span>
                         </a>
@@ -45,7 +45,7 @@
                 </div>
 
             </div><!-- /.card-header -->
-            <a href="/?design_code={{design.design_code}}">
+            <a href="/design/{{design.design_code}}">
                 <img class="card-img rounded-0" src="{{ design.original_image.url }}" />
             </a>
             <div class="card-body">
@@ -58,7 +58,7 @@
                     </dd>
                     <dt>Design Code</dt>
                     <dd>
-                        <a href="/?design_code={{design.design_code}}">
+                        <a href="/design/{{design.design_code}}">
                             <code>{{ design.design_code|format_design_code }}</code>
                         </a>
                     </dd>
