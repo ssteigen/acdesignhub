@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 from django.db.models import F
 
@@ -19,25 +19,39 @@ def index(request):
     if "creator_code" in request.GET:
         designs = designs.filter(creator_code=request.GET['creator_code'])
 
-    if "design_code" in request.GET:
-        designs = designs.filter(design_code=request.GET['design_code'])
-        # if there is more than one design, throw an error.
-        design = designs[0]
-        related_designs = Design.objects.approved().filter(creator_code=design.creator_code).exclude(design_code=design.design_code)
-
-        # increment view counter
-        Design.objects.filter(design_code=request.GET['design_code']).update(view_count=F('view_count')+1)
-
-        return render(request, 'hub/design.html', {
-            'design': design,
-            'related_designs': related_designs
-        })
-
     return render(request, 'hub/index.html', {
         'designs': designs,
         'design_types': design_types,
         'design_type_selected': request.GET.get('design_type'),
     })
+
+def detail(request, design_code):
+    design = Design.objects.approved().get(design_code=design_code)
+    related_designs = Design.objects.approved().filter(creator_code=design.creator_code).exclude(pk=design.pk)
+
+    # increment view counter
+    design.view_count += 1
+    design.save()
+
+    return render(request, 'hub/design.html', {
+        'design': design,
+        'related_designs': related_designs
+    })
+
+def download(request, design_code):
+    design = Design.objects.approved().get(design_code=design_code)
+
+    # increment view counter
+    design.download_count += 1
+    design.save()
+
+    filename = design.original_image.name
+
+    response = HttpResponse(design.original_image.open(), content_type='application/force-download')
+    response['Content-Disposition'] = f"attachment; filename={filename}"
+
+    return response
+
 
 def new(request):
     if request.method == 'POST':

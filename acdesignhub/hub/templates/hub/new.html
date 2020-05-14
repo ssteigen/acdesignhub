@@ -14,9 +14,7 @@
       <hr>
       <form id="submission" method="POST" enctype="multipart/form-data">
 
-
         {% csrf_token %}
-
 
         <div class="well">
           {{ form.original_image|as_crispy_field }}
