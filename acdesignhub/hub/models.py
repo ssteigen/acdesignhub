@@ -31,6 +31,9 @@ class Design(models.Model):
     design (the design itself, the user it belongs to, etc).
     """
 
+    class Meta:
+        ordering = ['-created_at']
+
     objects = DesignManager()
 
     TYPE_CHOICES = (
@@ -69,6 +72,8 @@ class Design(models.Model):
     creator_code = models.CharField(max_length=17)
 
     # Administration
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     approved = models.BooleanField(default=False)
 
     def __str__(self) -> str:

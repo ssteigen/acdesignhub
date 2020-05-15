@@ -51,10 +51,13 @@ class DesignAdmin(admin.ModelAdmin):
         'design_thumbnail',
         'view_count',
         'download_count',
+        'created_at',
         'approval_actions',
     )
 
     readonly_fields = (
+        'created_at',
+        'updated_at',
         'design_preview',
         'design_thumbnail',
         'view_count',
