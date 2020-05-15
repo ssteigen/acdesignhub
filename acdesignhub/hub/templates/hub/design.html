@@ -4,40 +4,49 @@
 
 {% block content %}
 
-<div class="card my-4">
-    <h1 class="card-header">
-        {{ design.design_name }} <small>by {{ design.creator_name }}</small>
-    </h1>
+<div style="max-width:60rem;" class="card my-4 mx-auto">
+    <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <h1 class="card-title">
+                    <strong>{{ design.design_name }}</strong>
+                    <small>by <a href="/?creator_code={{design.creator_code}}">{{ design.creator_name }}</a></small>
+                </h1>
+            </div>
+            <div class="col-auto">
+                <span class="badge badge-default">{{design.view_count}} views</span>
+                <span class="badge badge-default">{{design.download_count}} downloads</span>
+                <a href="/design/{{ design.design_code }}/download" title="download image" class="btn btn-secondary" >
+                    <i class="fas fa-download"></i>
+                    <span class="sr-only">Download Image</span>
+                </a>
+            </div>
+        </div>
+    </div>
     <img class="card-img rounded-0" src="{{ design.original_image.url }}" />
     <div class="card-body">
         <div class="row">
-            <div class="col">
-                <dl class="mb-0">
-                    <dt>Creator Code</dt>
-                    <dd>
-                        <a href="/?creator_code={{design.creator_code}}">
-                            <code>{{ design.creator_code|format_design_code }}</code>
-                        </a>
-                    </dd>
-                    <dt>Design Code</dt>
-                    <dd>
-                        <a href="/?design_code={{design.design_code}}">
-                            <code>{{ design.design_code|format_design_code }}</code>
-                        </a>
-                    </dd>
-                    <dt>Design Type</dt>
-                    <dd>
-                        <a href="/?design_type={{design.design_type}}">
-                            {{ design.get_design_type_display }}
-                        </a>
-                    </dd>
-                </dl>
+            <div class="col-auto">
+                <div class="mb-4">
+                    <h3>Creator Code</h3>
+                    <a style="background:#eee;" class="p-2 rounded text-space-out text-reset text-monospace" href="/?creator_code={{design.creator_code}}">
+                        {{ design.creator_code|format_design_code }}
+                    </a>
+                </div>
+                <div class="mb-4">
+                    <h3>Design Code</h3>
+                    <span style="background:#eee;" class="p-2 rounded text-space-out text-monospace">
+                        {{ design.design_code|format_design_code }}
+                    </span>
+                </div>
+                <a href="/?design_type={{design.design_type}}">
+                    <span class="badge badge-info">{{ design.get_design_type_display }}</span>
+                </a>
             </div>
             <div class="col">
-                <dl class="mb-0">
-                    <dt>Description</dt>
-                    <dd>{{ design.description }}</dd>
-                </dl>
+                <h3>Description</h3>
+                <p>This beautiful <a class="text-lowercase font-weight-bold" href="/?design_type={{design.design_type}}">{{design.get_design_type_display}}</a> is brought to you by <a class="font-weight-bold" href="/?creator_code={{design.creator_code}}">{{ design.creator_name }}</a> from the lovely island of <span class="font-weight-bold">{{design.creator_island}}</span>.</p>
+                <p>{{ design.description }}</p>
             </div>
         </div>
     </div>

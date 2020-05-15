@@ -2,6 +2,7 @@ import time
 
 from django.db import models
 
+from django.db.models import Q
 
 def _upload_path(instance: 'Submission', filename: str) -> str:
     """Generates a file path for a design image upload.
@@ -17,6 +18,11 @@ class DesignManager(models.Manager):
         """Filters only for approved designs."""
         return self.filter(approved=True)
 
+    def approved_hats(self):
+        return self.filter(
+            Q(approved=True),
+            Q(design_type='BRIMMED_CAP') | Q(design_type='BRIMMED_HAT') | Q(design_type='KNIT_CAP')
+        )
 
 class Design(models.Model):
     """A user-uploaded custom design.

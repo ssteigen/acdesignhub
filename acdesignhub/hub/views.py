@@ -13,8 +13,12 @@ def index(request):
     designs = Design.objects.approved()
     design_types = Design.TYPE_CHOICES
 
+    requested_types = request.GET.getlist('design_type')
+    requested_types = map(str.capitalize, requested_types)
+    requested_types = [sub.replace('_', ' ') for sub in requested_types]
+
     if "design_type" in request.GET:
-        designs = designs.filter(design_type=request.GET['design_type'])
+        designs = designs.filter(design_type__in=request.GET.getlist('design_type'))
 
     if "creator_code" in request.GET:
         designs = designs.filter(creator_code=request.GET['creator_code'])
@@ -22,7 +26,7 @@ def index(request):
     return render(request, 'hub/index.html', {
         'designs': designs,
         'design_types': design_types,
-        'design_type_selected': request.GET.get('design_type'),
+        'design_type_selected': requested_types,
     })
 
 def detail(request, design_code):
