@@ -31,6 +31,30 @@ body {
     height: 6rem;
 }
 
+.text-space-out {
+    letter-spacing: 3px;
+}
+
+.thumbnail {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    height: 200px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.thumbnail img {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    height: 210%;
+    width: auto;
+    -webkit-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+  }
+
 .bg-info {
     background-color: #f1edd4 !important;
     border: 6px solid #f1e7cc;
