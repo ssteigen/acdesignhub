@@ -68,7 +68,7 @@ class DesignAdmin(admin.ModelAdmin):
 
     def approval_actions(self, design):
         icon = "yes" if design.approved else "no"
-        action = "approve" if design.approved else "unapprove"
+        action = "unapprove" if design.approved else "approve"
 
         return mark_safe(f"""
             <a style="padding:6px 8px; background:#eee; border-radius:3px" href="{design.id}/{action}" title="{action}">
