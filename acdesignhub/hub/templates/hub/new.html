@@ -58,15 +58,16 @@
 
             reader.onload = function (e) {
               const preview = $('div#preview');
-              preview.html(
-                '<img style="max-width: 100%" src="' + e.target.result + '" />'
-              )
+              preview.empty();
 
               const img = new Image();
               img.src = e.target.result;
               img.onload = function() {
                 const width = this.width;
                 const height = this.height;
+
+                img.style.maxWidth = "100%";
+                preview.append(img);
 
                 const worker = Tesseract.createWorker({ logger: console.log });
 
