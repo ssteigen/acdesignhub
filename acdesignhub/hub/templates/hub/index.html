@@ -5,20 +5,23 @@
 {% block content %}
 
 <div class="text-center bg-info py-2 my-4 rounded-pill">
-    Displaying {{ designs|length }} design{{ designs|length|pluralize }} that match the following selections
-    <br>
-    {% for selection in design_type_selected %}
-        <span class="badge badge-info">{{selection}}</span>
-    {% endfor %}
+    Displaying {{ designs|length }} design{{ designs|length|pluralize }}
+    {% if design_type_selected %}
+        that match the following selections
+        <br>
+        {% for selection in design_type_selected %}
+            <span class="badge badge-info">{{selection}}</span>
+        {% endfor %}
+    {% endif %}
 </div>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+<div class="row px-2 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
     {% for design in designs %}
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-header bg-white border-0">
+    <div class="col px-2 mb-2">
+        <div class="card text-center">
+            <div class="card-header p-2 bg-white border-0">
                 <div class="row no-gutters">
-                    <div class="col text-truncate text-center">
+                    <div class="col text-truncate">
                         <div class="card-title mb-0 text-trim">
                             <a href="/design/{{design.design_code}}">
                                 <strong>{{ design.design_name }}</strong>
@@ -46,11 +49,11 @@
                 </a>
             </div><!-- /.thumbnail -->
 
-            <div class="card-body text-center">
+            <div class="card-body p-2">
                 <div style="background:#eee;" class="p-1 rounded">
-                    <a class="text-space-out text-reset text-monospace" href="/design/{{design.design_code}}">
+                    <span class="text-space-out text-reset text-monospace">
                         {{ design.design_code|format_design_code }}
-                    </a>
+                    </span>
                 </div>
             </div><!-- /.card-body -->
         </div><!-- /.card -->
