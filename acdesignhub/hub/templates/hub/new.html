@@ -14,7 +14,9 @@
       <hr>
       <form id="submission" method="POST" enctype="multipart/form-data">
 
+
         {% csrf_token %}
+
 
         <div class="well">
           {{ form.original_image|as_crispy_field }}
@@ -52,40 +54,140 @@
 
         $("input#id_original_image").change(function () {
           if (this.files && this.files[0]) {
-              var reader = new FileReader();
+            var reader = new FileReader();
 
-              reader.onload = function (e) {
-                $('div#preview').html(
-                  '<img style="max-width: 100%" src="' + e.target.result + '" />'
-                )
+            reader.onload = function (e) {
+              const preview = $('div#preview');
+              preview.empty();
 
-                Tesseract.recognize(
-                    e.target.result,
-                    'eng',
-                    { logger: m => console.log(m) }
-                  ).then(({ data: { text } }) => {
-                    var lines = text.split(/\r?\n/).filter(Boolean)
+              const img = new Image();
+              img.src = e.target.result;
+              img.onload = function() {
+                const width = this.width;
+                const height = this.height;
 
-                    var codes = lines.slice(-1)[0].split(/\s+/)
-                    var designType = lines.slice(-2)[0].trim()
-                    var creator = lines.slice(-3)[0].trim()
+                img.style.maxWidth = "100%";
+                preview.append(img);
 
-                    $('select#id_design_type option').map(function () {
-                      var optionText = $(this).text()
-                      var optionValue = $(this).val()
+                const worker = Tesseract.createWorker({ logger: console.log });
 
-                      if (designType.toLowerCase().includes(optionText.toLowerCase())) {
-                        $('select#id_design_type').val(optionValue)
-                      }
-                    })
+                (async function () {
+                  await worker.load();
+                  await worker.loadLanguage('eng');
+                  await worker.initialize('eng');
 
-                    $('input#id_creator').val(creator)
-                    $('input#id_design_code').val(codes.pop())
-                    $('input#id_creator_code').val(codes.pop())
-                  })
-              }
+                  async function extractText(left, top, width, height) {
+                    const { data } = await worker.recognize(e.target.result, {
+                      rectangle: { left, top, width, height },
+                    });
 
-              reader.readAsDataURL(this.files[0]);
+                    // var confidenceThreshold = 50;
+                    // var confidentText = [];
+                    // for (var word in data.words) {
+                    //   if (data.words[word].confidence > confidenceThreshold) {
+                    //     console.log('word');
+                    //     console.log(data.words[word]);
+                    //     confidentText.push(data.words[word].text);
+                    //   }
+                    // }
+
+                    // return confidentText.join(' ');
+
+                    return data.text;
+                  }
+
+                  const IMG_WIDTH = 1280;
+                  const IMG_HEIGHT = 720;
+
+                  const DESIGN_NAME_LEFT = 488 / IMG_WIDTH;
+                  const DESIGN_NAME_TOP = 112 / IMG_HEIGHT;
+                  const DESIGN_NAME_WIDTH = 305 / IMG_WIDTH;
+                  const DESIGN_NAME_HEIGHT = 74 / IMG_HEIGHT;
+
+                  $('input#id_design_name').val(await extractText(
+                    DESIGN_NAME_LEFT * width,
+                    DESIGN_NAME_TOP * height,
+                    DESIGN_NAME_WIDTH * width,
+                    DESIGN_NAME_HEIGHT * height
+                  ));
+
+                  const CREATOR_NAME_LEFT = 69 / IMG_WIDTH;
+                  const CREATOR_NAME_TOP = 466 / IMG_HEIGHT;
+                  const CREATOR_NAME_WIDTH = 276 / IMG_WIDTH;
+                  const CREATOR_NAME_HEIGHT = 47 / IMG_HEIGHT;
+
+                  $('input#id_creator_name').val(await extractText(
+                    CREATOR_NAME_LEFT * width,
+                    CREATOR_NAME_TOP * height,
+                    CREATOR_NAME_WIDTH * width,
+                    CREATOR_NAME_HEIGHT * height
+                  ));
+
+                  const CREATOR_ISLAND_LEFT = 119 / IMG_WIDTH;
+                  const CREATOR_ISLAND_TOP = 513 / IMG_HEIGHT;
+                  const CREATOR_ISLAND_WIDTH = 214 / IMG_WIDTH;
+                  const CREATOR_ISLAND_HEIGHT = 42 / IMG_HEIGHT;
+
+                  $('input#id_creator_island').val(await extractText(
+                    CREATOR_ISLAND_LEFT * width,
+                    CREATOR_ISLAND_TOP * height,
+                    CREATOR_ISLAND_WIDTH * width,
+                    CREATOR_ISLAND_HEIGHT * height
+                  ));
+
+                  const CREATOR_CODE_LEFT = 69 / IMG_WIDTH;
+                  const CREATOR_CODE_TOP = 557 / IMG_HEIGHT;
+                  const CREATOR_CODE_WIDTH = 276 / IMG_WIDTH;
+                  const CREATOR_CODE_HEIGHT = 30 / IMG_HEIGHT;
+
+                  $('input#id_creator_code').val(await extractText(
+                    CREATOR_CODE_LEFT * width,
+                    CREATOR_CODE_TOP * height,
+                    CREATOR_CODE_WIDTH * width,
+                    CREATOR_CODE_HEIGHT * height
+                  ));
+
+                  const DESIGN_TYPE_LEFT = 924 / IMG_WIDTH;
+                  const DESIGN_TYPE_TOP = 518 / IMG_HEIGHT;
+                  const DESIGN_TYPE_WIDTH = 300 / IMG_WIDTH;
+                  const DESIGN_TYPE_HEIGHT = 35 / IMG_HEIGHT;
+
+                  const designType = await extractText(
+                    DESIGN_TYPE_LEFT * width,
+                    DESIGN_TYPE_TOP * height,
+                    DESIGN_TYPE_WIDTH * width,
+                    DESIGN_TYPE_HEIGHT * height
+                  );
+
+                  console.log(designType);
+
+                  $('select#id_design_type option').map(function () {
+                    const optionText = $(this).text();
+                    const optionValue = $(this).val();
+
+                    if (designType.toLowerCase().includes(optionText.toLowerCase())) {
+                      $(this).prop('selected', true);
+                    }
+                  });
+
+                  const DESIGN_CODE_LEFT = 924 / IMG_WIDTH;
+                  const DESIGN_CODE_TOP = 557 / IMG_HEIGHT;
+                  const DESIGN_CODE_WIDTH = 300 / IMG_WIDTH;
+                  const DESIGN_CODE_HEIGHT = 30 / IMG_HEIGHT;
+
+                  $('input#id_design_code').val(await extractText(
+                    DESIGN_CODE_LEFT * width,
+                    DESIGN_CODE_TOP * height,
+                    DESIGN_CODE_WIDTH * width,
+                    DESIGN_CODE_HEIGHT * height
+                  ));
+
+                  await worker.terminate();
+                })();
+              };
+            }
+
+            reader.readAsDataURL(this.files[0]);
           }
         });
       })
