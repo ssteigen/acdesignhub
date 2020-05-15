@@ -14,7 +14,9 @@
       <hr>
       <form id="submission" method="POST" enctype="multipart/form-data">
 
+
         {% csrf_token %}
+
 
         <div class="well">
           {{ form.original_image|as_crispy_field }}
@@ -56,15 +58,16 @@
 
             reader.onload = function (e) {
               const preview = $('div#preview');
-              preview.html(
-                '<img style="max-width: 100%" src="' + e.target.result + '" />'
-              )
+              preview.empty();
 
               const img = new Image();
               img.src = e.target.result;
               img.onload = function() {
                 const width = this.width;
                 const height = this.height;
+
+                img.style.maxWidth = "100%";
+                preview.append(img);
 
                 const worker = Tesseract.createWorker({ logger: console.log });
 
@@ -79,23 +82,28 @@
                     });
 
 
-                    var confidenceThreshold = 50;
-                    var confidentText = [];
-                    for (var word in data.words) {
-                      if (data.words[word].confidence > confidenceThreshold) {
-                        console.log('word');
-                        console.log(data.words[word]);
-                        confidentText.push(data.words[word].text);
-                      }
-                    }
+                    // var confidenceThreshold = 50;
+                    // var confidentText = [];
+                    // for (var word in data.words) {
+                    //   if (data.words[word].confidence > confidenceThreshold) {
+                    //     console.log('word');
+                    //     console.log(data.words[word]);
+                    //     confidentText.push(data.words[word].text);
+                    //   }
+                    // }
 
-                    return confidentText.join(' ');
+                    // return confidentText.join(' ');
+
+                    return data.text;
                   }
 
-                  const DESIGN_NAME_LEFT = 0.38125;   /* 488 / 1280 */
-                  const DESIGN_NAME_TOP = 0.15556;    /* 112 /  720 */
-                  const DESIGN_NAME_WIDTH = 0.23828;  /* 305 / 1280 */
-                  const DESIGN_NAME_HEIGHT = 0.10278; /*  74 /  720 */
+                  const IMG_WIDTH = 1280;
+                  const IMG_HEIGHT = 720;
+
+                  const DESIGN_NAME_LEFT = 488 / IMG_WIDTH;
+                  const DESIGN_NAME_TOP = 112 / IMG_HEIGHT;
+                  const DESIGN_NAME_WIDTH = 305 / IMG_WIDTH;
+                  const DESIGN_NAME_HEIGHT = 74 / IMG_HEIGHT;
 
                   $('input#id_design_name').val(await extractText(
                     DESIGN_NAME_LEFT * width,
@@ -104,10 +112,10 @@
                     DESIGN_NAME_HEIGHT * height
                   ));
 
-                  const CREATOR_NAME_LEFT = 0.05391;   /*  69 / 1280 */
-                  const CREATOR_NAME_TOP = 0.64722;    /* 466 /  720 */
-                  const CREATOR_NAME_WIDTH = 0.21563;  /* 276 / 1280 */
-                  const CREATOR_NAME_HEIGHT = 0.06528; /*  47 /  720 */
+                  const CREATOR_NAME_LEFT = 69 / IMG_WIDTH;
+                  const CREATOR_NAME_TOP = 466 / IMG_HEIGHT;
+                  const CREATOR_NAME_WIDTH = 276 / IMG_WIDTH;
+                  const CREATOR_NAME_HEIGHT = 47 / IMG_HEIGHT;
 
                   $('input#id_creator_name').val(await extractText(
                     CREATOR_NAME_LEFT * width,
@@ -116,10 +124,10 @@
                     CREATOR_NAME_HEIGHT * height
                   ));
 
-                  const CREATOR_ISLAND_LEFT = 0.09297;    /* 119 / 1280 */
-                  const CREATOR_ISLAND_TOP = 0.71250;     /* 513 /  720 */
-                  const CREATOR_ISLAND_WIDTH = 0.16719;   /* 214 / 1280 */
-                  const CREATOR_ISLAND_HEIGHT = 0.05833;  /*  42 /  720 */
+                  const CREATOR_ISLAND_LEFT = 119 / IMG_WIDTH;
+                  const CREATOR_ISLAND_TOP = 513 / IMG_HEIGHT;
+                  const CREATOR_ISLAND_WIDTH = 214 / IMG_WIDTH;
+                  const CREATOR_ISLAND_HEIGHT = 42 / IMG_HEIGHT;
 
                   $('input#id_creator_island').val(await extractText(
                     CREATOR_ISLAND_LEFT * width,
@@ -128,10 +136,10 @@
                     CREATOR_ISLAND_HEIGHT * height
                   ));
 
-                  const CREATOR_CODE_LEFT = 0.05391;    /*  69 / 1280 */
-                  const CREATOR_CODE_TOP = 0.77361;     /* 557 /  720 */
-                  const CREATOR_CODE_WIDTH = 0.21563;   /* 276 / 1280 */
-                  const CREATOR_CODE_HEIGHT = 0.04167;  /*  30 /  720 */
+                  const CREATOR_CODE_LEFT = 69 / IMG_WIDTH;
+                  const CREATOR_CODE_TOP = 557 / IMG_HEIGHT;
+                  const CREATOR_CODE_WIDTH = 276 / IMG_WIDTH;
+                  const CREATOR_CODE_HEIGHT = 30 / IMG_HEIGHT;
 
                   $('input#id_creator_code').val(await extractText(
                     CREATOR_CODE_LEFT * width,
@@ -140,17 +148,20 @@
                     CREATOR_CODE_HEIGHT * height
                   ));
 
-                  const DESIGN_TYPE_LEFT = 0.72188;   /* 924 / 1280 */
-                  const DESIGN_TYPE_TOP = 0.71944;    /* 518 /  720 */
-                  const DESIGN_TYPE_WIDTH = 0.23438;  /* 300 / 1280 */
-                  const DESIGN_TYPE_HEIGHT = 0.04861; /*  35 /  720 */
+                  const DESIGN_TYPE_LEFT = 924 / IMG_WIDTH;
+                  const DESIGN_TYPE_TOP = 518 / IMG_HEIGHT;
+                  const DESIGN_TYPE_WIDTH = 300 / IMG_WIDTH;
+                  const DESIGN_TYPE_HEIGHT = 35 / IMG_HEIGHT;
 
                   const designType = await extractText(
                     DESIGN_TYPE_LEFT * width,
-                    DESIGN_NAME_TOP * height,
+                    DESIGN_TYPE_TOP * height,
                     DESIGN_TYPE_WIDTH * width,
                     DESIGN_TYPE_HEIGHT * height
                   );
+
+                  console.log(designType);
+
                   $('select#id_design_type option').map(function () {
                     const optionText = $(this).text();
                     const optionValue = $(this).val();
@@ -160,10 +171,10 @@
                     }
                   });
 
-                  const DESIGN_CODE_LEFT = 0.72188;    /* 924 / 1280 */
-                  const DESIGN_CODE_TOP = 0.77361;     /* 557 /  720 */
-                  const DESIGN_CODE_WIDTH = 0.23438;   /* 300 / 1280 */
-                  const DESIGN_CODE_HEIGHT = 0.04167;  /*  30 /  720 */
+                  const DESIGN_CODE_LEFT = 924 / IMG_WIDTH;
+                  const DESIGN_CODE_TOP = 557 / IMG_HEIGHT;
+                  const DESIGN_CODE_WIDTH = 300 / IMG_WIDTH;
+                  const DESIGN_CODE_HEIGHT = 30 / IMG_HEIGHT;
 
                   $('input#id_design_code').val(await extractText(
                     DESIGN_CODE_LEFT * width,
