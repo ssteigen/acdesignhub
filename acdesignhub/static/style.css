@@ -38,7 +38,7 @@ body {
 .thumbnail {
     position: relative;
     width: 100%;
-    max-width: 380px;
+    max-width: 330px;
     height: 200px;
     overflow: hidden;
     margin: 0 auto;
