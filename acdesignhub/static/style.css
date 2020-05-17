@@ -46,14 +46,19 @@ body {
 
 .thumbnail img {
     position: absolute;
-    left: 50%;
-    top: 46%;
     height: 210%;
     width: auto;
-    -webkit-transform: translate(-50%,-50%);
-        -ms-transform: translate(-50%,-50%);
-            transform: translate(-50%,-50%);
-  }
+    -webkit-transform: translate(-50%,-28%);
+        -ms-transform: translate(-50%,-28%);
+            transform: translate(-50%,-28%);
+}
+
+.thumbnail:hover img {
+    height: 400%;
+    -webkit-transform: translate(-84%,-44%);
+        -ms-transform: translate(-84%,-44%);
+            transform: translate(-84%,-44%);
+}
 
 .bg-info {
     background-color: #f1edd4 !important;

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="text-center bg-info py-2 my-4 rounded-pill">
+<div class="text-center bg-info p-2 my-2 rounded-pill">
     Displaying {{ designs|length }} design{{ designs|length|pluralize }}
     {% if design_type_selected %}
         that match the following selections
@@ -15,7 +15,7 @@
     {% endif %}
 </div>
 
-<div class="row px-2 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+<div class="row p-2 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
     {% for design in designs %}
     <div class="col px-2 mb-2">
         <div class="card text-center">
