@@ -6,7 +6,28 @@ from django.urls import path, reverse
 
 from django.http import HttpResponseRedirect
 
-from .models import Design
+from .models import Design, Image
+
+class DesignImagesInline(admin.StackedInline):
+    model = Image
+
+    extra = 0
+
+    fields = (
+        'image_preview',
+        'image',
+    )
+
+    readonly_fields = (
+        'image_preview',
+    )
+
+    def image_preview(self, image):
+        return mark_safe(f"""
+            <a href="{image.image.url}">
+                <img style="width: auto; max-width: 100%" src="{image.image.url}" />
+            </a>
+        """)
 
 @admin.register(Design)
 class DesignAdmin(admin.ModelAdmin):
@@ -44,10 +65,11 @@ class DesignAdmin(admin.ModelAdmin):
         }),
     )
 
+    inlines = (DesignImagesInline, )
+
     list_display = (
         'design_name',
-        'creator_code',
-        'design_code',
+        'codes',
         'design_thumbnail',
         'view_count',
         'download_count',
@@ -69,14 +91,41 @@ class DesignAdmin(admin.ModelAdmin):
         'unapprove',
     )
 
+    def _format_design_code(value):
+        part1 = value[0:2]
+        part2 = value[2:6]
+        part3 = value[6:10]
+        part4 = value[10:14]
+        return "-".join([part1, part2, part3, part4])
+
+    def codes(self, design):
+        return mark_safe(f"""
+            <p>
+                <strong>Design Code</strong><br/>
+                <code style="letter-spacing: 2px">{DesignAdmin._format_design_code(design.design_code)}</code>
+            </p>
+            <p>
+                <strong>Creator Code</strong><br />
+                <code style="letter-spacing: 2px">{DesignAdmin._format_design_code(design.creator_code)}</code>
+            </p>
+        """)
+
     def approval_actions(self, design):
         icon = "yes" if design.approved else "no"
         action = "unapprove" if design.approved else "approve"
+
+        view_link = ''
+
+        if design.approved:
+            view_link = mark_safe(f"""
+                <a style="padding:6px 8px; background:#eee; border-radius:3px; margin-left: .5rem;" href="/design/{design.design_code}" title="view">View</a>
+            """)
 
         return mark_safe(f"""
             <a style="padding:6px 8px; background:#eee; border-radius:3px" href="{design.id}/{action}" title="{action}">
                 <img style="width:20px;" src="/static/admin/img/icon-{icon}.svg" alt="True">
             </a>
+            {view_link}
         """)
 
     def design_thumbnail(self, design):
@@ -89,7 +138,7 @@ class DesignAdmin(admin.ModelAdmin):
     def design_preview(self, design):
         return mark_safe(f"""
             <a href="{design.original_image.url}">
-                <img style="width: 100%;" src="{design.original_image.url}" />
+                <img style="width: auto; max-width: 100%" src="{design.original_image.url}" />
             </a>
         """)
 

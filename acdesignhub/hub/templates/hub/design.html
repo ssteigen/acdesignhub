@@ -23,7 +23,23 @@
             </div>
         </div>
     </div>
-    <img class="card-img rounded-0" src="{{ design.original_image.url }}" />
+
+    <img class="main-image card-img rounded-0" src="{{ design.original_image.url }}" />
+
+    {% if additional_images %}
+        <div class="thumbs m-2">
+            <div class="img-thumbnail-square thumb active">
+                <img class="design" src="{{ design.original_image.url }}" />
+            </div>
+
+            {% for image in additional_images %}
+                <div class="img-thumbnail-square thumb">
+                    <img class="" src="{{ image.image.url }}">
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="card-body">
         <div class="row">
             <div class="col-auto">
@@ -42,50 +58,77 @@
                 <a href="/?design_type={{design.design_type}}">
                     <span class="badge badge-info">{{ design.get_design_type_display }}</span>
                 </a>
-            </div>
+            </div><!-- /.col-auto -->
             <div class="col">
                 <h3>Description</h3>
                 <p>This beautiful <a class="text-lowercase font-weight-bold" href="/?design_type={{design.design_type}}">{{design.get_design_type_display}}</a> is brought to you by <a class="font-weight-bold" href="/?creator_code={{design.creator_code}}">{{ design.creator_name }}</a> from the lovely island of <span class="font-weight-bold">{{design.creator_island}}</span>.</p>
                 <p>{{ design.description }}</p>
-            </div>
-        </div>
-    </div>
-</div>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.card-body -->
 
-{% if related_designs %}
-    <hr>
-    <h2>Other Designs by {{ design.creator_name }}</h2>
-        <div class="row row-cols-1 row-cols-md-3">
-            {% for design in related_designs %}
-            <div class="col mb-4">
-                <div class="card">
-                    <a href="/?design_code={{design.design_code}}">
-                        <img class="card-img-top" src="{{ design.original_image.url }}" />
-                    </a>
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            <strong>{{ design.design_name }}</strong>
-                        </h4>
-                        <hr>
-                        <dl class="mb-0">
-                            <dt>Design Code</dt>
-                            <dd>
-                                <a href="/?design_code={{design.design_code}}">
-                                    <code>{{ design.design_code|format_design_code }}</code>
+    {% if related_designs %}
+        <div class="card-footer">
+            <h2>Other Designs by {{ design.creator_name }}</h2>
+            <div class="row p-2 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4">
+                {% for design in related_designs %}
+                    <div class="col px-2 mb-2">
+                        <div class="card text-center">
+                            <div class="card-header p-2 bg-white border-0">
+                                <div class="row no-gutters">
+                                    <div class="col text-truncate">
+                                        <div class="card-title mb-0 text-trim">
+                                            <a href="/design/{{design.design_code}}">
+                                                <strong>{{ design.design_name }}</strong>
+                                            </a>
+                                            <br>
+                                            <a href="/?design_type={{design.design_type}}">
+                                                <span class="badge badge-info">{{ design.get_design_type_display }}</span>
+                                            </a>
+                                        </div><!-- /.card-title -->
+                                    </div><!-- /.col -->
+                                    <div class="col-auto">
+                                        <a href="/design/{{ design.design_code }}/download" title="download image" class="btn btn-secondary btn-sm ml-2" >
+                                            <i class="fas fa-download"></i>
+                                            <span class="sr-only">Download Image</span>
+                                        </a>
+                                    </div><!-- /.col -->
+                                </div><!-- /.row -->
+                            </div><!-- /.card-header -->
+
+                            <div class="thumbnail">
+                                <a href="/design/{{design.design_code}}">
+                                    <img class="card-img rounded-0" src="{{ design.original_image.url }}" />
                                 </a>
-                            </dd>
-                            <dt>Design Type</dt>
-                            <dd>
-                                <a href="/?design_type={{design.design_type}}">
-                                    {{ design.get_design_type_display }}
-                                </a>
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
+                            </div><!-- /.thumbnail -->
+
+                            <div class="card-body p-2">
+                                <div style="background:#eee;" class="p-1 rounded">
+                                    <span class="text-space-out text-reset text-monospace">
+                                        {{ design.design_code|format_design_code }}
+                                    </span>
+                                </div>
+                            </div><!-- /.card-body -->
+                        </div><!-- /.card -->
+                    </div><!-- /.col -->
+                {% endfor %}
+            </div><!-- /.row -->
+        </div><!-- /.card-footer -->
+    {% endif %}
+</div><!-- /.card -->
+
+
+
+<script>
+    $('.thumbs img').hover(function() {
+        $(this).css('cursor', 'pointer');
+    });
+
+    $('.thumbs img').click(function() {
+        $('.thumbs .thumb').removeClass('active');
+        $(this).parent().addClass('active');
+        $('.main-image').attr('src', $(this).attr('src'));
+    });
+</script>
 
 {% endblock %}

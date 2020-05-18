@@ -35,6 +35,45 @@ body {
     letter-spacing: 3px;
 }
 
+.img-thumbnail-square {
+    width: 10rem;
+    height: 10rem;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.img-thumbnail-square img {
+    height: 100%;
+    left: 5rem;
+    top: 5rem;
+    position: absolute;
+    -webkit-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+}
+
+.img-thumbnail-square img.design {
+    top: 4.5rem;
+    height: 20rem;
+}
+
+.thumb {
+    border: 3px solid transparent;
+    border-radius: 2px;
+}
+
+.thumb.active {
+    border: 3px solid #59bca8;
+}
+
+.additional-images {
+    position: absolute;
+    z-index:1000;
+    bottom: .5rem;
+    right: .5rem;
+}
+
 .thumbnail {
     position: relative;
     width: 100%;

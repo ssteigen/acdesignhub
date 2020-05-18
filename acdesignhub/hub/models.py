@@ -56,7 +56,7 @@ class Design(models.Model):
     )
 
     # The original uploaded image.
-    original_image = models.FileField(upload_to=_upload_path, max_length=1024)
+    original_image = models.ImageField(upload_to=_upload_path, max_length=1024)
 
     # Design metadata.
     design_name = models.CharField(max_length=255)
@@ -78,3 +78,10 @@ class Design(models.Model):
 
     def __str__(self) -> str:
         return f'{self.design_name} ({self.creator_name})'
+
+class Image(models.Model):
+    design = models.ForeignKey(
+        Design,
+        on_delete=models.CASCADE,
+    )
+    image = models.ImageField(upload_to=_upload_path)

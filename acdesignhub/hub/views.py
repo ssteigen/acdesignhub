@@ -1,16 +1,15 @@
+from django.contrib import messages
+from django.forms import modelformset_factory
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
-from django.db.models import F
+from django.db.models import Count
 
-import django_tables2 as tables
-
-from .models import Design
-from .tables import DesignTable
-from .forms import DesignForm
+from .models import Design, Image
+from .forms import DesignForm, ImageForm
 
 def index(request):
-    designs = Design.objects.approved()
+    designs = Design.objects.approved().annotate(number_of_images=Count('image'))
     design_types = Design.TYPE_CHOICES
 
     requested_types = request.GET.getlist('design_type')
@@ -33,13 +32,16 @@ def detail(request, design_code):
     design = Design.objects.approved().get(design_code=design_code)
     related_designs = Design.objects.approved().filter(creator_code=design.creator_code).exclude(pk=design.pk)
 
+    additional_images = design.image_set.all()
+
     # increment view counter
     design.view_count += 1
     design.save()
 
     return render(request, 'hub/design.html', {
         'design': design,
-        'related_designs': related_designs
+        'additional_images': additional_images,
+        'related_designs': related_designs,
     })
 
 def download(request, design_code):
@@ -58,16 +60,31 @@ def download(request, design_code):
 
 
 def new(request):
+    ImageFormSet = modelformset_factory(Image, form=ImageForm, extra=3)
+
     if request.method == 'POST':
         form = DesignForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none())
+
+        if form.is_valid() and formset.is_valid():
+            design = form.save()
+
+            imageset_forms = filter(bool, formset.cleaned_data)
+            for imageset in imageset_forms:
+                print(imageset)
+                image = imageset['image']
+                photo = Image(design=design, image=image)
+                photo.save()
+
+            messages.success(request, 'Posted!')
             return HttpResponseRedirect('/')
         else:
             raise RuntimeError(form.errors)
     else:
         """A view for uploading a new design."""
         form = DesignForm()
+        formset = ImageFormSet(queryset=Image.objects.none())
         return render(request, 'hub/new.html', {
-            'form': form
+            'form': form,
+            'formset': formset
         })

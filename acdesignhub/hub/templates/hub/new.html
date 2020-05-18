@@ -13,17 +13,12 @@
       <h2 class="card-title">Upload a new design</h2>
       <hr>
       <form id="submission" method="POST" enctype="multipart/form-data">
-
-
         {% csrf_token %}
 
-
-        <div class="well">
-          {{ form.original_image|as_crispy_field }}
+        {{ form.original_image|as_crispy_field:"bootstrap4" }}
         <div id="preview" class="my-2 p-2">
           <img src="https://via.placeholder.com/900x500&text=preview" alt="preview image">
         </div><!-- /#preview -->
-      </div>
 
         {{ form.design_name|as_crispy_field }}
 
@@ -41,6 +36,11 @@
         </div><!-- /.row -->
 
         {{ form.description|as_crispy_field }}
+
+        <h2>Additional Images</h2>
+        {{ formset.management_form }}
+        {% crispy formset %}
+
 
         <input type="submit" value="Submit" class="btn btn-primary">
       </form>
