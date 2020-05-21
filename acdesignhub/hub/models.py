@@ -1,8 +1,8 @@
 import time
 
 from django.db import models
-
 from django.db.models import Q
+from django.db.models.functions import Concat
 
 def _upload_path(instance: 'Submission', filename: str) -> str:
     """Generates a file path for a design image upload.
@@ -56,10 +56,15 @@ class Design(models.Model):
     )
 
     # The original uploaded image.
+    # undocked FB upload
+    # file_size: 69KB
+    # file_type: JPEG
+    # image_width: 1280
+    # image_height: 720
     original_image = models.ImageField(upload_to=_upload_path, max_length=1024)
 
     # Design metadata.
-    design_name = models.CharField(max_length=255)
+    design_name = models.CharField(max_length=20)
     design_type = models.CharField(choices=TYPE_CHOICES, max_length=128)
     design_code = models.CharField(max_length=17)
     description = models.TextField(blank=True, null=True)

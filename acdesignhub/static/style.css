@@ -27,10 +27,6 @@ body {
     width: 100%;
 }
 
-#id_description {
-    height: 6rem;
-}
-
 .text-space-out {
     letter-spacing: 3px;
 }

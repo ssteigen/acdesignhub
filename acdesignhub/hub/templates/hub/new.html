@@ -5,6 +5,7 @@
 {% block javascript %}
 {{ block.super }}
 <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'></script>
 {% endblock %}
 
 {% block content %}
@@ -12,10 +13,15 @@
     <div class="card-body">
       <h2 class="card-title">Upload a new design</h2>
       <hr>
+      <p>The custom designs you post can be viewed by other players around the world.</p>
+      <p>Please do not post designs that contain illegal content or would make other players uncomfortable.</p>
+      <p>Posted designs can be deleted from the server if they are deemed to be inappropriate and in violation of the <a href="https://www.nintendo.com/nintendoaccount/code-of-conduct/" target="_blank">Nintendo Code of Conduct</a>.</p>
+      <hr>
       <form id="submission" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
-        {{ form.original_image|as_crispy_field:"bootstrap4" }}
+        {{ form.original_image|as_crispy_field }}
+
         <div id="preview" class="my-2 p-2">
           <img src="https://via.placeholder.com/900x500&text=preview" alt="preview image">
         </div><!-- /#preview -->
@@ -39,7 +45,7 @@
 
         <h2>Additional Images</h2>
         {{ formset.management_form }}
-        {% crispy formset %}
+        {{ formset|crispy }}
 
 
         <input type="submit" value="Submit" class="btn btn-primary">
@@ -51,6 +57,20 @@
     (function () {
 
       $(document).ready(function () {
+
+        // Input Masking!
+        $("input#id_creator_code").mask('MA-####-####-####', {
+          placeholder: "MA-####-####-####"
+        });
+        $("input#id_design_code").mask('MO-JJJJ-JJJJ-JJJJ', {
+          placeholder: "MO-####-####-####",
+          translation: {
+            'J': {pattern: /[0-9abcdefghjklmnpqrstuvwxyABCDEFGHJKLMNPQRSTUVWXY]/}
+          },
+          onKeyPress: function (value, event) {
+            event.currentTarget.value = value.toUpperCase();
+          }
+        });
 
         $("input#id_original_image").change(function () {
           if (this.files && this.files[0]) {
@@ -69,6 +89,29 @@
                 img.style.maxWidth = "100%";
                 preview.append(img);
 
+                $('.error-message').remove();
+                $('.warning-message').remove();
+
+                const REC_WIDTH = 1280;
+                const REC_HEIGHT = 720;
+
+                const MIN_WIDTH = .75 * REC_WIDTH;
+                const MIN_HEIGHT =  .75 * REC_HEIGHT;
+
+                if (width < MIN_WIDTH || height < MIN_HEIGHT) {
+                  var errorMessage = `Minimum image size is ${MIN_WIDTH}x${MIN_HEIGHT}.`
+                  errorMessage += '<br />';
+                  errorMessage += `Your image is ${width}x${height}.`
+                  errorMessage += '<br />';
+                  $('div#preview').after(`<div class="error-message p-2 mb-2 rounded bg-danger text-light">${errorMessage}</div>`);
+                } else
+                if (width < REC_WIDTH || height < REC_HEIGHT) {
+                  var warningMessage = `Recommended image size is ${REC_WIDTH}x${REC_HEIGHT}.`
+                  warningMessage += '<br />';
+                  warningMessage += `Your image is ${width}x${height}.`
+                  $('div#preview').after(`<div class="warning-message p-2 mb-2 rounded bg-warning">${warningMessage}</div>`);
+                }
+
                 const worker = Tesseract.createWorker({ logger: console.log });
 
                 (async function () {
@@ -76,7 +119,8 @@
                   await worker.loadLanguage('eng');
                   await worker.initialize('eng');
 
-                  async function extractText(left, top, width, height) {
+                  async function extractText(left, top, width, height, params = {}) {
+                    await worker.setParameters(params);
                     const { data } = await worker.recognize(e.target.result, {
                       rectangle: { left, top, width, height },
                     });
@@ -87,7 +131,7 @@
                     //   if (data.words[word].confidence > confidenceThreshold) {
                     //     console.log('word');
                     //     console.log(data.words[word]);
-                    //     confidentText.push(data.words[word].text);
+                    //     // confidentText.push(data.words[word].text);
                     //   }
                     // }
 
@@ -99,10 +143,10 @@
                   const IMG_WIDTH = 1280;
                   const IMG_HEIGHT = 720;
 
-                  const DESIGN_NAME_LEFT = 488 / IMG_WIDTH;
-                  const DESIGN_NAME_TOP = 112 / IMG_HEIGHT;
-                  const DESIGN_NAME_WIDTH = 305 / IMG_WIDTH;
-                  const DESIGN_NAME_HEIGHT = 74 / IMG_HEIGHT;
+                  const DESIGN_NAME_LEFT = 393 / IMG_WIDTH;
+                  const DESIGN_NAME_TOP = 113 / IMG_HEIGHT;
+                  const DESIGN_NAME_WIDTH = 492 / IMG_WIDTH;
+                  const DESIGN_NAME_HEIGHT = 79 / IMG_HEIGHT;
 
                   $('input#id_design_name').val(await extractText(
                     DESIGN_NAME_LEFT * width,
@@ -144,7 +188,8 @@
                     CREATOR_CODE_LEFT * width,
                     CREATOR_CODE_TOP * height,
                     CREATOR_CODE_WIDTH * width,
-                    CREATOR_CODE_HEIGHT * height
+                    CREATOR_CODE_HEIGHT * height,
+                    { tessedit_char_whitelist: 'MA-0123456789' }
                   ));
 
                   const DESIGN_TYPE_LEFT = 924 / IMG_WIDTH;
@@ -179,7 +224,8 @@
                     DESIGN_CODE_LEFT * width,
                     DESIGN_CODE_TOP * height,
                     DESIGN_CODE_WIDTH * width,
-                    DESIGN_CODE_HEIGHT * height
+                    DESIGN_CODE_HEIGHT * height,
+                    { tessedit_char_whitelist: 'MO-0123456789ABCDEFGHJKLMNPQRSTUVWXY' }
                   ));
 
                   await worker.terminate();

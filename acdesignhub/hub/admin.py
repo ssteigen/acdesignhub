@@ -69,8 +69,10 @@ class DesignAdmin(admin.ModelAdmin):
 
     list_display = (
         'design_name',
-        'codes',
+        'design_code_formatted',
+        'creator_info',
         'design_thumbnail',
+        'image_dimensions',
         'view_count',
         'download_count',
         'created_at',
@@ -91,31 +93,34 @@ class DesignAdmin(admin.ModelAdmin):
         'unapprove',
     )
 
-    def _format_design_code(value):
-        part1 = value[0:2]
-        part2 = value[2:6]
-        part3 = value[6:10]
-        part4 = value[10:14]
-        return "-".join([part1, part2, part3, part4])
-
-    def codes(self, design):
+    def design_code_formatted(self, design):
         return mark_safe(f"""
-            <p>
-                <strong>Design Code</strong><br/>
-                <code style="letter-spacing: 2px">{DesignAdmin._format_design_code(design.design_code)}</code>
-            </p>
-            <p>
-                <strong>Creator Code</strong><br />
-                <code style="letter-spacing: 2px">{DesignAdmin._format_design_code(design.creator_code)}</code>
-            </p>
+            <span style="font-family:monospace; letter-spacing:2px;">
+                {design.design_code}
+            </span>
         """)
+    design_code_formatted.admin_order_field = 'design_code'
+
+    def creator_info(self, design):
+        return mark_safe(f"""
+            <dl>
+                <dt>Creator Code<dt>
+                <dd style="font-family:monospace; letter-spacing:2px;">
+                    {design.creator_code}
+                </dd>
+                <dt>Creator Name</dt>
+                <dd>{design.creator_name}</dd>
+                <dt>Creator Island</dt>
+                <dd>{design.creator_island}</dd>
+            </dl>
+        """)
+    creator_info.admin_order_field = 'creator_code'
 
     def approval_actions(self, design):
         icon = "yes" if design.approved else "no"
         action = "unapprove" if design.approved else "approve"
 
         view_link = ''
-
         if design.approved:
             view_link = mark_safe(f"""
                 <a style="padding:6px 8px; background:#eee; border-radius:3px; margin-left: .5rem;" href="/design/{design.design_code}" title="view">View</a>
@@ -131,9 +136,29 @@ class DesignAdmin(admin.ModelAdmin):
     def design_thumbnail(self, design):
         return mark_safe(f"""
             <a href="{design.original_image.url}">
-                <img style="width: 200px;" src="{design.original_image.url}" />
+                <img style="max-height: 10rem;" src="{design.original_image.url}" />
             </a>
         """)
+
+    def image_dimensions(self, design):
+        rec_width = 1280
+        rec_height = 720
+
+        width = design.original_image.width
+        height = design.original_image.height
+
+        paragraph_style = ''
+        if width < .75 * rec_width or height < .75 * rec_height:
+            paragraph_style = 'background: red;'
+        elif width < rec_width or height < rec_height:
+            paragraph_style = 'background: yellow;'
+
+        return mark_safe(f"""
+            <p style="{paragraph_style}">
+                {width} x {height}
+            <p>
+        """)
+
 
     def design_preview(self, design):
         return mark_safe(f"""
