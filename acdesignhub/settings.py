@@ -24,7 +24,7 @@ SECRET_KEY = '*@k622tu&k67^^(q^$^+!kp9awd9sntcxus1jt6gedn5sd-9dx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['acdesignhub.herokuapp.com']
+ALLOWED_HOSTS = ['acdesignhub.herokuapp.com', '127.0.0.1']
 
 # Media (e.g. file uploads) configuration.
 MEDIA_URL = '/media/'

@@ -1,15 +1,22 @@
 import time
+import pathlib
 
 from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Concat
 
-def _upload_path(instance: 'Submission', filename: str) -> str:
+def _design_upload_path(instance: 'Submission', filename: str) -> str:
     """Generates a file path for a design image upload.
+    """
+
+    return f'designs/{instance.design_code}{pathlib.Path(filename).suffix}'
+
+def _upload_path(instance: 'Submission', filename: str) -> str:
+    """Generates a file path for an image upload.
 
     Ensures uniqueness across uploads.
     """
-    return f'designs/{int(time.time())}/original-{filename}'
+    return f'images/{int(time.time())}/original-{filename}'
 
 class DesignManager(models.Manager):
     """Manages access to the Design records."""
@@ -61,7 +68,7 @@ class Design(models.Model):
     # file_type: JPEG
     # image_width: 1280
     # image_height: 720
-    original_image = models.ImageField(upload_to=_upload_path, max_length=1024)
+    original_image = models.ImageField(upload_to=_design_upload_path, max_length=1024)
 
     # Design metadata.
     design_name = models.CharField(max_length=20)
