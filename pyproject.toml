@@ -8,7 +8,7 @@ authors = ["Savanah Steigen <steigen@theinstitutes.org>"]
 python = "^3.7"
 django = "^3.0.6"
 django-crispy-forms = "^1.9.1"
-Pillow = "^7.1.2"
+Pillow = "^8.2.0"
 
 [tool.poetry.dev-dependencies]
 
